@@ -1,6 +1,9 @@
 package com.example.beans;
 
+import com.example.constant.JsonSyntax;
+
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * User: fashare(153614131@qq.com)
@@ -10,8 +13,14 @@ import java.util.HashMap;
 public class JsonObject {
     protected HashMap<String, Object> jsonMap = new HashMap<>();
 
-    public HashMap<String, Object> getJsonMap() {
-        return jsonMap;
+    public JsonObject(){}
+
+    public JsonObject(List<JsonItem> jsonItems) {
+        jsonItems.stream().forEach(this:: putItem);
+    }
+
+    public void putItem(JsonItem jsonItem) {
+        jsonMap.put(jsonItem.getKey(), jsonItem.getValue());
     }
 
     public String getString(String key){
@@ -22,6 +31,17 @@ public class JsonObject {
 
     @Override
     public String toString() {
-        return jsonMap.toString();
+        return "" + JsonSyntax.BRACE_BEGIN
+                + jsonMap.entrySet().stream()
+                        .map(JsonItem:: new)
+                        .map(JsonItem:: toString)
+                        .reduce(this:: mergeString)
+                        .orElse("")
+                + JsonSyntax.BRACE_END;
     }
+
+    private String mergeString(String a, String b) {
+        return a + ("" + JsonSyntax.SEPARATOR+" ") + b;
+    }
+
 }

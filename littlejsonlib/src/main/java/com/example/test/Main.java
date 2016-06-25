@@ -13,7 +13,12 @@ import com.google.gson.Gson;
 public class Main {
     public static void main(String[] args) {
         Person person = new Person();
-        String jsonStr = new Gson().toJson(person);
+        String jsonStr;
+        jsonStr = new Gson().toJson(person);
+        System.out.println(jsonStr);
+
+        jsonStr = JsonParser.toJson(person);
+//        jsonStr = "{\"name\":\"sdsd\"}";
         System.out.println(jsonStr);
 
         System.out.println(JsonSyntaxUtil.checkSyntax(jsonStr));
