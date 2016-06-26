@@ -15,4 +15,6 @@ public class JsonSyntax {
     // Json 分隔符
     public static final char COLON = ':';
     public static final char SEPARATOR = ',';
+
+
 }  

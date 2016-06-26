@@ -7,11 +7,9 @@ import com.google.gson.Gson;
  * Date: 2016-06-24
  * Time: 19:23
  */
-public class Person {
-    private String name = "person";
+public class Student {
+    private String name = "student";
     private int age = 22;
-    private double score = 3.7;
-    private boolean is = true;
 
     @Override
     public String toString() {

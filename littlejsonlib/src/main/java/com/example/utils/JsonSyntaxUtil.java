@@ -1,7 +1,8 @@
 package com.example.utils;
 
-import com.example.beans.JsonItem;
+import com.example.beans.JsonObject;
 import com.example.constant.JsonSyntax;
+import com.example.constant.ValueType;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -66,31 +67,28 @@ public class JsonSyntaxUtil {
 //        return itemList;
 //    }
 
-    public static List<JsonItem> getJsonItemList(String jsonString) {
+    public static List<JsonObject.JsonItem> getJsonItemList(String jsonString) {
         return Stream.of(jsonString.trim())
-                .map(JsonSyntaxUtil:: getInnerString) // 提取花括号中的实体
+                .map(str -> (String)ValueType.getValue(str, ValueType.JSON_OBJECT)) // 提取花括号中的实体
                 .flatMap(itemMap -> Stream.of(itemMap.split(JsonSyntax.SEPARATOR + "")))    // 按逗号分割
                 .map(String:: trim) // 去掉首尾空格
                 .map(itemStr -> itemStr.split(JsonSyntax.COLON + ""))   // item => "\"key\": value".按冒号分割
-                .map(JsonSyntaxUtil:: getInnerString) // 提取引号中的实体
+                .filter(strings -> strings.length == 2)
+                .map(JsonSyntaxUtil:: getKeyAndValue)
                 .filter(JsonSyntaxUtil:: isKeyAndValueNotNull) // 保留 key 和 value 都不为空的
-                .map(JsonItem:: new)
+                .map(JsonObject.JsonItem:: new)
                 .collect(Collectors.toList());
     }
 
-    private static String[] getInnerString(String[] strings) {
-        return Stream.of(strings).map(JsonSyntaxUtil::getInnerString)
-                .collect(Collectors.toList())
-                .toArray(new String[0]);
+    private static Object[] getKeyAndValue(String[] strings) {
+        return Stream.of(strings)
+                .map(String:: trim)
+                .map(ValueType:: getValue)
+                .toArray();
     }
 
-    private static String getInnerString(String string){    // 提取引号中的实体
-        string = string.trim();
-        return string.length()>=2? string.substring(1, string.length()-1).trim(): null;
-    }
-
-    public static boolean isKeyAndValueNotNull(String[] strings) {
-        return strings.length==2 && strings[0]!=null && strings[1]!=null;
+    public static boolean isKeyAndValueNotNull(Object[] objs) {
+        return objs[0]!=null && objs[1]!=null;
     }
 
     public static boolean checkSyntax(String jsonString) {

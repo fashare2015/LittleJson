@@ -1,7 +1,6 @@
 package com.example.utils;
 
-import com.example.beans.JsonItem;
-import com.example.test.Person;
+import com.example.beans.JsonObject;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.stream.Stream;
  */
 public class JsonClassLoader {
 
-    public static List<JsonItem> getJsonItemList(Object obj) {
+    public static List<JsonObject.JsonItem> getJsonItemList(Object obj) {
         return Stream.of(obj)
                 .flatMap(o -> Stream.of(o.getClass().getDeclaredFields()))  // getFields
                 .map(field -> getJsonItem(field, obj))
@@ -23,12 +22,12 @@ public class JsonClassLoader {
                 .collect(Collectors.toList());
     }
 
-    private static JsonItem getJsonItem(Field field, Object fatherObj){
-        JsonItem jsonItem = null;
+    private static JsonObject.JsonItem getJsonItem(Field field, Object fatherObj){
+        JsonObject.JsonItem jsonItem = null;
         try {
             boolean accessible = field.isAccessible();
             field.setAccessible(true);
-            jsonItem = new JsonItem(field.getName(), (String) field.get(fatherObj));
+            jsonItem = new JsonObject.JsonItem(field.getName(), field.get(fatherObj));
             field.setAccessible(accessible);
         }catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -36,7 +35,7 @@ public class JsonClassLoader {
         return jsonItem;
     }
 
-    public static Object newInstance(List<JsonItem> jsonItems, Class<Person> clazz) {
+    public static <T> T newInstance(List<JsonObject.JsonItem> jsonItems, Class<T> clazz) {
         Object object = null;
         try {
             final Object fatherObj = object = clazz.newInstance();
@@ -47,10 +46,10 @@ public class JsonClassLoader {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return object;
+        return (T)object;
     }
 
-    private static void setField(Field[] fields, Object fatherObj, final JsonItem jsonItem) {
+    private static void setField(Field[] fields, Object fatherObj, final JsonObject.JsonItem jsonItem) {
         Stream.of(fields).filter(field -> field.getName().equals(jsonItem.getKey()))
                 .forEach(field -> {
                     try {

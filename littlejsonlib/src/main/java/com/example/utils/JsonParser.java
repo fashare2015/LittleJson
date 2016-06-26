@@ -1,8 +1,6 @@
 package com.example.utils;
 
-import com.example.beans.JsonItem;
 import com.example.beans.JsonObject;
-import com.example.test.Person;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -20,24 +18,23 @@ public class JsonParser {
                 .findFirst().orElse(new JsonObject());
     }
 
-    private static Stream<List<JsonItem>> getJsonItemList(String jsonString) {
+    private static Stream<List<JsonObject.JsonItem>> getJsonItemList(String jsonString) {
         return Stream.of(jsonString)
-                .filter(JsonSyntaxUtil:: checkSyntax)
+//                .filter(JsonSyntaxUtil:: checkSyntax)
                 .map(JsonSyntaxUtil::getJsonItemList);
     }
 
-    public static String toJson(Person person) {
-        return Stream.of(person)
+    public static <T> String toJson(T t) {
+        return Stream.of(t)
                 .map(JsonClassLoader::getJsonItemList)
                 .map(JsonObject:: new)
                 .map(jsonObject -> jsonObject.toString())
                 .findFirst().orElse("");
     }
 
-
-    public static Person fromJson(String jsonString, Class<Person> clazz) {
+    public static <T> T fromJson(String jsonString, Class<T> clazz) {
         return getJsonItemList(jsonString)
-                .map(jsonItems -> (Person)JsonClassLoader.newInstance(jsonItems, clazz))
+                .map(jsonItems -> JsonClassLoader.newInstance(jsonItems, clazz))
                 .findFirst().orElse(null);
     }
 }
