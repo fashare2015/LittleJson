@@ -25,5 +25,11 @@ public class Main {
 
         JsonObject jsonObject = JsonParser.parse(jsonStr);
         System.out.println(jsonObject.getString("name") + jsonObject.getString("age") + jsonObject.getString("ssss"));
+
+        jsonStr = "{\"name\" : \"hjhj\", \"sf\": \"s\"}";
+        Person p;
+//                p = new Gson().fromJson(jsonStr, Person.class);
+        p = JsonParser.fromJson(jsonStr, Person.class);
+        System.out.println(p.toString());
     }
 }  

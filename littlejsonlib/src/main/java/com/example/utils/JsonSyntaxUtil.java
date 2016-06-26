@@ -55,7 +55,7 @@ public class JsonSyntaxUtil {
 //            && string.substring(len-1, len).equals("\"");
 //    }
 
-//    public static List<JsonItem> getJsonItems(String jsonString) {
+//    public static List<JsonItem> getJsonItemList(String jsonString) {
 //        String itemMap = getInnerString(jsonString);
 //        String[] items = itemMap.split(JsonSyntax.SEPARATOR + "");
 //        List<JsonItem> itemList = new ArrayList<>();
@@ -66,7 +66,7 @@ public class JsonSyntaxUtil {
 //        return itemList;
 //    }
 
-    public static List<JsonItem> getJsonItems(String jsonString) {
+    public static List<JsonItem> getJsonItemList(String jsonString) {
         return Stream.of(jsonString.trim())
                 .map(JsonSyntaxUtil:: getInnerString) // 提取花括号中的实体
                 .flatMap(itemMap -> Stream.of(itemMap.split(JsonSyntax.SEPARATOR + "")))    // 按逗号分割
