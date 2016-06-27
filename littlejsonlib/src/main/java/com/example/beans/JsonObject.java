@@ -5,6 +5,7 @@ import com.example.constant.JsonSyntax;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javafx.util.Pair;
 
@@ -12,9 +13,15 @@ import javafx.util.Pair;
  * User: fashare(153614131@qq.com)
  * Date: 2016-06-24
  * Time: 17:23
+ * <br/><br/>
+ * 由 map 存放的一系列 json 键值对 {@link JsonItem}
  */
 public class JsonObject {
     protected HashMap<String, Object> jsonMap = new HashMap<>();
+
+    public HashMap<String, Object> getJsonMap() {
+        return jsonMap;
+    }
 
     public JsonObject(){}
 
@@ -22,8 +29,9 @@ public class JsonObject {
         jsonItems.stream().forEach(this:: putItem);
     }
 
+    // value 可能是基本类型, 也可能是嵌套的 JsonObject
     public void putItem(JsonItem jsonItem) {
-        jsonMap.put(jsonItem.getKey(), jsonItem.getValue());
+        jsonMap.put((String) jsonItem.getKey(), jsonItem.getValue());
     }
 
     public String getString(String key){
@@ -32,11 +40,16 @@ public class JsonObject {
         return "null";
     }
 
+    public List<JsonItem> getJsonItemList(){
+        return jsonMap.entrySet().stream()
+                .map(JsonItem:: new)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public String toString() {
         return "" + JsonSyntax.BRACE_BEGIN
-                + jsonMap.entrySet().stream()
-                        .map(JsonItem:: new)
+                + getJsonItemList().stream()
                         .map(JsonItem:: toString)
                         .reduce(this:: mergeString)
                         .orElse("")
@@ -55,6 +68,9 @@ public class JsonObject {
      * User: fashare(153614131@qq.com)
      * Date: 2016-06-24
      * Time: 20:04
+     * <br/><br/>
+     * Json 键值对, {key: value}
+     * 基本等同于 Map.Entry
      */
     public static class JsonItem extends Pair<String, Object> {
 
@@ -78,6 +94,7 @@ public class JsonObject {
         private String getValueString() {
             Object obj = getValue();
             return obj instanceof String? String.format("\"%s\"", obj): obj.toString();
+            // 如果 obj instanceof JsonObject, 也会自动递归下去.
         }
     }
 }

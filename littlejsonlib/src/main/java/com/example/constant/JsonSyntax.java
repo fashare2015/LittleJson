@@ -4,6 +4,8 @@ package com.example.constant;
  * User: fashare(153614131@qq.com)
  * Date: 2016-06-24
  * Time: 18:22
+ * <br/><br/>
+ * Json 语法常量
  */
 public class JsonSyntax {
     // Json 首尾

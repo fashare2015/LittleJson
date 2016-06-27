@@ -1,12 +1,18 @@
 package com.example.constant;
 
 import com.example.utils.RegexUtil;
+import com.example.beans.*;
 
 import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * Created by apple on 16-6-26.
+ * User: fashare(153614131@qq.com)
+ * Date: 2016-06-26
+ * Time: 18:06
+ * <br/><br/>
+ * 在 {@link JsonObject.JsonItem} {key: value}中,
+ * 指定 value 的可取的类型
  */
 public enum ValueType {
     STRING(RegexPattern.STRING, ValueLoader.STRING),

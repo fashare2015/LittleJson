@@ -1,7 +1,5 @@
 package com.example.test;
 
-import com.google.gson.Gson;
-
 /**
  * User: fashare(153614131@qq.com)
  * Date: 2016-06-24
@@ -12,9 +10,10 @@ public class Person {
     private int age = 22;
     private double score = 3.7;
     private boolean is = true;
-
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
-    }
+    private Student stu = new Student();
+//
+//    @Override
+//    public String toString() {
+//        return JsonParser.toJson(this);
+//    }
 }

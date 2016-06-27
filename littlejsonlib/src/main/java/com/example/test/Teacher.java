@@ -5,10 +5,9 @@ package com.example.test;
  * Date: 2016-06-24
  * Time: 19:23
  */
-public class Student {
-    private String name = "student";
-    private int age = 22;
-//    private Teacher teacher = new Teacher();
+public class Teacher {
+    private String name = "teacher";
+    private int age = 40;
 
 //    @Override
 //    public String toString() {
