@@ -34,7 +34,7 @@ public class JsonClassLoader {
             {
                 value = field.get(fatherObj);
                 if(!ClassUtil.isBaseDataType(value.getClass()))   // value不是基本类型,递归下去,得到jsonObject
-//                    value = new JsonObject(getJsonItemList(value));
+//                    value = new JsonObject(parseJsonObject(value));
                     value = com.example.JsonParser.parse(value);
                 jsonItem = new JsonObject.JsonItem(key, value);
             }

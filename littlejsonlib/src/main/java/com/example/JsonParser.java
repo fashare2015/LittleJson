@@ -2,7 +2,7 @@ package com.example;
 
 import com.example.beans.JsonObject;
 import com.example.utils.JsonClassLoader;
-import com.example.utils.JsonSyntaxUtil;
+import com.example.utils.JsonTypeSwitcher;
 
 import java.util.stream.Stream;
 
@@ -15,14 +15,13 @@ import java.util.stream.Stream;
  * 主要有三个函数:
  * 1.toJson(): JavaBean/JsonObject -> JsonString
  * 2.fromJson(): JsonString/JsonObject -> JavaBean
- * 3.parse(): JavaBean/JsonString -> JsonObject
+ * 3.parseJsonObject(): JavaBean/JsonString -> JsonObject
  */
 public class JsonParser {
 
     public static JsonObject parse(String jsonString){
         return Stream.of(jsonString)
-                .map(JsonSyntaxUtil::getJsonItemList)   // 从 JsonString 按语法解析
-                .map(JsonObject:: new)
+                .map(JsonTypeSwitcher:: <JsonObject>read)
                 .findFirst().orElse(new JsonObject());
     }
 
@@ -38,7 +37,9 @@ public class JsonParser {
     }
 
     public static String toJson(JsonObject jsonObject){
-        return jsonObject.toString();
+        return Stream.of(jsonObject)
+                .map(JsonTypeSwitcher:: write)
+                .findFirst().orElse(null);
     }
 
     public static <T> T fromJson(String jsonString, Class<T> clazz) {

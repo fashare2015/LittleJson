@@ -2,7 +2,6 @@ package com.example.utils;
 
 import com.example.beans.JsonObject;
 import com.example.constant.JsonSyntax;
-import com.example.constant.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +13,15 @@ import java.util.stream.Stream;
  * Date: 2016-06-24
  * Time: 18:32
  * <br/><br/>
- * JsonString 语法解析工具
+ * JsonString 语法解析、重组工具
  */
 public class JsonSyntaxUtil {
+
+    public static JsonObject parseJsonObject(String jsonString) {
+        return Stream.of(getJsonItemList(jsonString))
+                .map(JsonObject:: new)
+                .findFirst().orElse(null);
+    }
 
     public static List<JsonObject.JsonItem> getJsonItemList(String jsonString) {
         return Stream.of(jsonString.trim())
@@ -63,11 +68,18 @@ public class JsonSyntaxUtil {
     private static Object[] getKeyAndValue(String[] strings) {
         return Stream.of(strings)
                 .map(String:: trim)
-                .map(ValueType:: getValue)
+                .map(JsonTypeSwitcher::read)
                 .toArray();
     }
 
     private static boolean isKeyAndValueNotNull(Object[] objs) {
         return objs[0]!=null && objs[1]!=null;
+    }
+
+    public static String surroundBy(Object str, char surroundBeginWith){
+        return Stream.of(JsonSyntax.SURROUND_MODS)
+                .filter(mod -> mod[0] == surroundBeginWith)
+                .map(mod -> "" + mod[0] + str + mod[1])
+                .findFirst().orElse(str.toString());
     }
 }

@@ -1,8 +1,6 @@
 package com.example.beans;
 
 import com.example.constant.JsonSyntax;
-import com.example.utils.JsonSyntaxUtil;
-import com.example.utils.JsonTypeSwitcher;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,22 +16,22 @@ import javafx.util.Pair;
  * <br/><br/>
  * 由 map 存放的一系列 json 键值对 {@link JsonItem}
  */
-public class JsonObject {
+public class JsonArray {
     protected HashMap<String, Object> jsonMap = new HashMap<>();
 
     public HashMap<String, Object> getJsonMap() {
         return jsonMap;
     }
 
-    public JsonObject(){}
+    public JsonArray(){}
 
-    public JsonObject(List<JsonItem> jsonItems) {
+    public JsonArray(List<JsonItem> jsonItems) {
         jsonItems.stream().forEach(this:: putItem);
     }
 
     // value 可能是基本类型, 也可能是嵌套的 JsonObject
     public void putItem(JsonItem jsonItem) {
-        jsonMap.put(jsonItem.getKey(), jsonItem.getValue());
+        jsonMap.put((String) jsonItem.getKey(), jsonItem.getValue());
     }
 
     public String getString(String key){
@@ -50,12 +48,12 @@ public class JsonObject {
 
     @Override
     public String toString() {
-        return JsonSyntaxUtil.surroundBy(
-                getJsonItemList().stream()
+        return "" + JsonSyntax.BRACE_BEGIN
+                + getJsonItemList().stream()
                         .map(JsonItem:: toString)
                         .reduce(this:: mergeString)
                         .orElse("")
-                , JsonSyntax.BRACE_BEGIN);
+                + JsonSyntax.BRACE_END;
     }
 
     private String mergeString(String a, String b) {
@@ -90,11 +88,13 @@ public class JsonObject {
 
         @Override
         public String toString() {
-            return String.format("%s%s %s",
-                    JsonTypeSwitcher.write(getKey()),
-                    JsonSyntax.COLON,
-                    JsonTypeSwitcher.write(getValue())  // 递归下去!!!
-            );
+            return String.format("\"%s\"%s %s", getKey(), JsonSyntax.COLON, getValueString());
+        }
+
+        private String getValueString() {
+            Object obj = getValue();
+            return obj instanceof String? String.format("\"%s\"", obj): obj.toString();
+            // 如果 obj instanceof JsonObject, 也会自动递归下去.
         }
     }
 }
