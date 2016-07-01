@@ -3,7 +3,7 @@ package com.example.constant;
 import com.example.beans.JsonArray;
 import com.example.beans.JsonObject;
 import com.example.interfaces.JsonIO;
-import com.example.utils.JsonSyntaxUtil;
+import com.example.utils.JsonIOUtil;
 
 /**
  * User: fashare(153614131@qq.com)
@@ -22,15 +22,15 @@ public class JsonIOs {
 
     public static final JsonIO<String> STRING = new JsonIO<>(
             str -> str.substring(1, str.length()-1),
-            str -> JsonSyntaxUtil.surroundBy(str, JsonSyntax.DOUBLE_QUOTE)
+            str -> JsonIOUtil.surroundBy(str, JsonSyntax.DOUBLE_QUOTE)
     );
 
     public static final JsonIO<Character> CHAR = new JsonIO<>(
             str -> str.charAt(1),
-            character -> JsonSyntaxUtil.surroundBy(character, JsonSyntax.SINGLE_QUOTE)
+            character -> JsonIOUtil.surroundBy(character, JsonSyntax.SINGLE_QUOTE)
     );
 
-    public static final JsonIO<JsonObject> JSON_OBJECT = new JsonIO<>(JsonSyntaxUtil:: parseJsonObject);
+    public static final JsonIO<JsonObject> JSON_OBJECT = new JsonIO<>(JsonIOUtil:: parseJsonObject);
 
     public static final JsonIO<JsonArray> JSON_ARRAY = new JsonIO<>(
             null,

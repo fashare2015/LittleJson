@@ -1,46 +1,26 @@
 package com.example.interfaces;
 
-import com.example.beans.JsonObject;
-
-import java.util.function.Function;
+import com.example.constant.JsonType;
 
 /**
  * User: fashare(153614131@qq.com)
  * Date: 2016-06-26
  * Time: 18:06
  * <br/><br/>
- * 在 {@link JsonObject.JsonItem} {key: value}中, <br/>
- * 根据 key/value 的不同类型, 用 Reader 作不同的解析 <br/>
- * @param <T> key/value 对应的 JavaBean 的类型
+ * key/value<br/>
+ * jsonString 和 {@link JsonType}指定类 之间的 IO 转换<br/>
+ * @param <T> jsonString 对应的 {@link JsonType}指定类
  */
-public class JsonIO<T> {
-    public interface Reader<T> extends Function<String, T> {}
-    public interface Writer<T> extends Function<T, String> {}
+public class JsonIO<T> extends IO<T, String>{
+//    private static Reader<T, String> DEFAULT_READER = str -> (T)str;
+//    private static Writer<T, String> DEFAULT_WRITER = T:: toString;
+//TODO    static 引用泛型？
 
-    private Reader<T> DEFAULT_READER = str -> (T)str;
-    private Writer<T> DEFAULT_WRITER = t -> t.toString();
-
-    private Reader<T> reader = DEFAULT_READER;
-    private Writer<T> writer = DEFAULT_WRITER;
-
-    public JsonIO(Reader<T> reader, Writer<T> writer) {
-        this.reader = reader;
-        this.writer = writer;
+    public JsonIO(Reader<T, String> reader, Writer<T, String> writer) {
+        super(reader, writer);
     }
 
-    public JsonIO(Reader<T> reader){
-        this.reader = reader;
-    }
-
-//    public JsonIO(Writer<T> writer){
-//        this.writer = writer;
-//    }
-
-    public Reader<T> getReader(){
-        return reader;
-    }
-
-    public Writer<T> getWriter(){
-        return writer;
+    public JsonIO(Reader<T, String> reader) {
+        this(reader, T:: toString);
     }
 }

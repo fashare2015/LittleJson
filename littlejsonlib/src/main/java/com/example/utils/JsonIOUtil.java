@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * <br/><br/>
  * JsonString 语法解析、重组工具
  */
-public class JsonSyntaxUtil {
+public class JsonIOUtil {
 
     public static JsonObject parseJsonObject(String jsonString) {
         return Stream.of(getJsonItemList(jsonString))
@@ -23,15 +23,15 @@ public class JsonSyntaxUtil {
                 .findFirst().orElse(null);
     }
 
-    public static List<JsonObject.JsonItem> getJsonItemList(String jsonString) {
+    private static List<JsonObject.JsonItem> getJsonItemList(String jsonString) {
         return Stream.of(jsonString.trim())
                 .map(str -> str.substring(1, str.length()-1))   // 提取花括号中的实体
                 .flatMap(itemMap -> Stream.of(mySplitItemMap(itemMap))) // 按逗号分割
                 .map(String:: trim) // 去掉首尾空格
                 .map(itemStr -> mySplitItemStr(itemStr))    // item => "\"key\": value".按冒号分割
                 .filter(strings -> strings.length == 2)
-                .map(JsonSyntaxUtil:: getKeyAndValue)
-                .filter(JsonSyntaxUtil:: isKeyAndValueNotNull) // 保留 key 和 value 都不为空的
+                .map(JsonIOUtil:: getKeyAndValue)
+                .filter(JsonIOUtil:: isKeyAndValueNotNull) // 保留 key 和 value 都不为空的
                 .map(JsonObject.JsonItem:: new)
                 .collect(Collectors.toList());
     }
@@ -68,7 +68,7 @@ public class JsonSyntaxUtil {
     private static Object[] getKeyAndValue(String[] strings) {
         return Stream.of(strings)
                 .map(String:: trim)
-                .map(JsonTypeSwitcher::read)
+                .map(JsonTypeSwitcher::read)    // 递归下去
                 .toArray();
     }
 

@@ -1,7 +1,6 @@
 package com.example;
 
 import com.example.beans.JsonObject;
-import com.example.utils.JsonClassLoader;
 import com.example.utils.JsonTypeSwitcher;
 
 import java.util.stream.Stream;
@@ -25,15 +24,14 @@ public class JsonParser {
                 .findFirst().orElse(new JsonObject());
     }
 
-    public static <T> JsonObject parse(T t){
-        return Stream.of(t)
-                .map(JsonClassLoader::getJsonItemList)  // 从 JavaBean 中通过反射解析
-                .map(JsonObject:: new)
+    public static <BEAN> JsonObject parse(BEAN bean){
+        return Stream.of(bean)
+                .map(JsonTypeSwitcher:: <JsonObject>read)   // 从 JavaBean 中通过反射解析
                 .findFirst().orElse(new JsonObject());
     }
 
-    public static <T> String toJson(T t) {
-        return toJson(parse(t));
+    public static <BEAN> String toJson(BEAN bean) {
+        return toJson(parse(bean));
     }
 
     public static String toJson(JsonObject jsonObject){
@@ -42,13 +40,13 @@ public class JsonParser {
                 .findFirst().orElse(null);
     }
 
-    public static <T> T fromJson(String jsonString, Class<T> clazz) {
+    public static <BEAN> BEAN fromJson(String jsonString, Class<BEAN> clazz) {
         return fromJson(parse(jsonString), clazz);
     }
 
-    public static <T> T fromJson(JsonObject jsonObject, Class<T> clazz) {
+    public static <BEAN> BEAN fromJson(JsonObject jsonObject, Class<BEAN> clazz) {
         return Stream.of(jsonObject)
-                .map(mJsonObject -> JsonClassLoader.newInstance(mJsonObject, clazz))
+                .map(mJsonObject -> JsonTypeSwitcher.write(mJsonObject, clazz))
                 .findFirst().orElse(null);
     }
 }

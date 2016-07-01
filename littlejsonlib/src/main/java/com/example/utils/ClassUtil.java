@@ -1,7 +1,6 @@
 package com.example.utils;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.stream.Stream;
 
 /**
@@ -10,11 +9,27 @@ import java.util.stream.Stream;
  * Time: 21:38
  */
 public class ClassUtil {
-    private static final Class[] baseClasses = {
-            String.class, Integer.class, Byte.class, Long.class,
-            Double.class, Float.class, Character.class, Short.class,
-            BigDecimal.class, BigInteger.class, Boolean.class
-    };
+//    private static final Pair<?, ?>[] primitivePairs = {
+//            new Pair<>(int.class, Integer.class),
+//            new Pair<>(byte.class, Byte.class),
+//            new Pair<>(long.class, Long.class),
+//            new Pair<>(double.class, Double.class),
+//            new Pair<>(float.class, Float.class),
+//            new Pair<>(char.class, Character.class),
+//            new Pair<>(short.class, Short.class),
+//            new Pair<>(boolean.class, Boolean.class)
+//    };
+
+    private static final HashMap<Class<?>, Class<?>> primitiveMap = new HashMap<Class<?>, Class<?>>(){{
+            put(int.class, Integer.class);
+            put(byte.class, Byte.class);
+            put(long.class, Long.class);
+            put(double.class, Double.class);
+            put(float.class, Float.class);
+            put(char.class, Character.class);
+            put(short.class, Short.class);
+            put(boolean.class, Boolean.class);
+    }};
 
     /**
      * 判断一个类是否为基本数据类型。
@@ -22,8 +37,21 @@ public class ClassUtil {
      * @return true 表示为基本数据类型。
      */
     public static boolean isBaseDataType(Class clazz){
-        return Stream.of(baseClasses)
-                .filter(aClass -> aClass.equals(clazz) || clazz.isPrimitive())
+        return primitiveMap.entrySet().stream()
+                .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
+                .filter(aClass -> aClass.equals(clazz))
                 .count() > 0;
     }
-}  
+
+    /**
+     * 如果是基本类型则转换为对应的包装类, 别的类型不变
+     * @param rawClazz 原类型
+     * @return 包装类型
+     */
+    public static Class wrapperIfPrimitive(Class rawClazz) {
+        return Stream.of(rawClazz)
+                .filter(Class:: isPrimitive)
+                .map(aClass -> (Class)primitiveMap.get(aClass))
+                .findFirst().orElse(rawClazz);
+    }
+}

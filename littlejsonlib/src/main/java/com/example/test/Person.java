@@ -10,7 +10,8 @@ public class Person {
     private int age = 22;
     private double score = 3.7;
     private boolean is = true;
-    private Student stu = new Student();
+    private char ch = 'c';
+    private Student stu = null;
 //
 //    @Override
 //    public String toString() {

@@ -14,9 +14,15 @@ import java.util.stream.Stream;
  * <br/><br/>
  * 类的解析工具(通过反射)
  */
-public class JsonClassLoader {
+public class JavaBeanIOUtil {
 
-    public static List<JsonObject.JsonItem> getJsonItemList(Object obj) {
+    public static JsonObject parseJsonObject(Object obj) {
+        return Stream.of(getJsonItemList(obj))
+                .map(JsonObject:: new)
+                .findFirst().orElse(null);
+    }
+
+    private static List<JsonObject.JsonItem> getJsonItemList(Object obj) {
         return Stream.of(obj.getClass().getDeclaredFields())    // getFields
                 .map(field -> getJsonItem(field, obj))
                 .filter(jsonItem -> jsonItem != null)
@@ -33,9 +39,10 @@ public class JsonClassLoader {
             field.setAccessible(true);
             {
                 value = field.get(fatherObj);
-                if(!ClassUtil.isBaseDataType(value.getClass()))   // value不是基本类型,递归下去,得到jsonObject
-//                    value = new JsonObject(parseJsonObject(value));
-                    value = com.example.JsonParser.parse(value);
+//                if(!ClassUtil.isBaseDataType(value.getClass()))   // value不是基本类型,递归下去,得到jsonObject
+//                    value = com.example.JsonParser.parse(value);
+                value = JsonTypeSwitcher.read(value);
+                // 直接递归下去, 由 JsonTypeSwitcher 判断是否基本类型
                 jsonItem = new JsonObject.JsonItem(key, value);
             }
             field.setAccessible(accessible);
@@ -72,8 +79,10 @@ public class JsonClassLoader {
 
                         field.setAccessible(true);
                         {
-                            if(value instanceof JsonObject) // value不是基本类型, 递归下去
-                                value = com.example.JsonParser.fromJson((JsonObject) value, field.getType());
+//                            if(value instanceof JsonObject) // value不是基本类型, 递归下去
+//                                value = com.example.JsonParser.fromJson((JsonObject) value, field.getType());
+                            value = JsonTypeSwitcher.write(value, field.getType());
+                            // 直接递归下去, 由 JsonTypeSwitcher 判断是否基本类型
                             field.set(fatherObj, value);
                         }
                         field.setAccessible(accessible);

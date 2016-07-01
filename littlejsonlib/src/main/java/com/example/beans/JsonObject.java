@@ -1,7 +1,7 @@
 package com.example.beans;
 
 import com.example.constant.JsonSyntax;
-import com.example.utils.JsonSyntaxUtil;
+import com.example.utils.JsonIOUtil;
 import com.example.utils.JsonTypeSwitcher;
 
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class JsonObject {
 
     @Override
     public String toString() {
-        return JsonSyntaxUtil.surroundBy(
+        return JsonIOUtil.surroundBy(
                 getJsonItemList().stream()
                         .map(JsonItem:: toString)
                         .reduce(this:: mergeString)
