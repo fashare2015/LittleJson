@@ -1,7 +1,7 @@
-package com.example;
+package com.fashare.littlejson;
 
-import com.example.beans.JsonObject;
-import com.example.utils.JsonTypeSwitcher;
+import com.fashare.littlejson.beans.JsonObject;
+import com.fashare.littlejson.utils.JsonTypeSwitcher;
 
 import java.util.stream.Stream;
 

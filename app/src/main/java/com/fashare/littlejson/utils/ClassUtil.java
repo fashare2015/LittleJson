@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.fashare.littlejson.utils;
 
 import java.util.HashMap;
 import java.util.stream.Stream;

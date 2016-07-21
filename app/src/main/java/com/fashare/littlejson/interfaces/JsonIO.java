@@ -1,6 +1,7 @@
-package com.example.interfaces;
+package com.fashare.littlejson.interfaces;
 
-import com.example.constant.JsonType;
+
+import com.fashare.littlejson.constant.JsonType;
 
 /**
  * User: fashare(153614131@qq.com)

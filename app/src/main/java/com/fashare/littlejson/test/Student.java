@@ -1,13 +1,14 @@
-package com.example.test;
+package com.fashare.littlejson.test;
 
 /**
  * User: fashare(153614131@qq.com)
  * Date: 2016-06-24
  * Time: 19:23
  */
-public class Teacher {
-    private String name = "teacher";
-    private int age = 40;
+public class Student {
+    private String name = "student";
+    private int age = 22;
+//    private Teacher teacher = new Teacher();
 
 //    @Override
 //    public String toString() {

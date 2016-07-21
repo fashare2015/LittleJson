@@ -1,7 +1,8 @@
-package com.example.utils;
+package com.fashare.littlejson.utils;
 
-import com.example.beans.JsonObject;
-import com.example.constant.JsonSyntax;
+
+import com.fashare.littlejson.beans.JsonObject;
+import com.fashare.littlejson.constant.JsonSyntax;
 
 import java.util.ArrayList;
 import java.util.List;

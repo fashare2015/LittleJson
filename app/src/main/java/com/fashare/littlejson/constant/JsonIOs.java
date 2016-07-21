@@ -1,9 +1,9 @@
-package com.example.constant;
+package com.fashare.littlejson.constant;
 
-import com.example.beans.JsonArray;
-import com.example.beans.JsonObject;
-import com.example.interfaces.JsonIO;
-import com.example.utils.JsonIOUtil;
+import com.fashare.littlejson.beans.JsonArray;
+import com.fashare.littlejson.beans.JsonObject;
+import com.fashare.littlejson.interfaces.JsonIO;
+import com.fashare.littlejson.utils.JsonIOUtil;
 
 /**
  * User: fashare(153614131@qq.com)

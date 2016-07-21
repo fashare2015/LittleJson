@@ -1,4 +1,4 @@
-package com.example.constant;
+package com.fashare.littlejson.constant;
 
 /**
  * User: fashare(153614131@qq.com)

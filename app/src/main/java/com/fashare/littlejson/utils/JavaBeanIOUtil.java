@@ -1,6 +1,7 @@
-package com.example.utils;
+package com.fashare.littlejson.utils;
 
-import com.example.beans.JsonObject;
+
+import com.fashare.littlejson.beans.JsonObject;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -80,7 +81,7 @@ public class JavaBeanIOUtil {
                         field.setAccessible(true);
                         {
 //                            if(value instanceof JsonObject) // value不是基本类型, 递归下去
-//                                value = com.example.JsonParser.fromJson((JsonObject) value, field.getType());
+//                                value = JsonParser.fromJson((JsonObject) value, field.getType());
                             value = JsonTypeSwitcher.write(value, field.getType());
                             // 直接递归下去, 由 JsonTypeSwitcher 判断是否基本类型
                             field.set(fatherObj, value);

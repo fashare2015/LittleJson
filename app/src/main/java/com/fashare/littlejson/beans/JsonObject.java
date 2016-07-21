@@ -1,15 +1,15 @@
-package com.example.beans;
+package com.fashare.littlejson.beans;
 
-import com.example.constant.JsonSyntax;
-import com.example.utils.JsonIOUtil;
-import com.example.utils.JsonTypeSwitcher;
+
+import com.fashare.littlejson.JsonObjectParsable;
+import com.fashare.littlejson.constant.JsonSyntax;
+import com.fashare.littlejson.utils.JsonIOUtil;
+import com.fashare.littlejson.utils.JsonTypeSwitcher;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javafx.util.Pair;
 
 /**
  * User: fashare(153614131@qq.com)
@@ -18,7 +18,7 @@ import javafx.util.Pair;
  * <br/><br/>
  * 由 map 存放的一系列 json 键值对 {@link JsonItem}
  */
-public class JsonObject {
+public class JsonObject implements JsonObjectParsable {
     protected HashMap<String, Object> jsonMap = new HashMap<>();
 
     public HashMap<String, Object> getJsonMap() {
@@ -74,10 +74,13 @@ public class JsonObject {
      * Json 键值对, {key: value}
      * 基本等同于 Map.Entry
      */
-    public static class JsonItem extends Pair<String, Object> {
+    public static class JsonItem implements Map.Entry<String, Object> {
+        private String key;
+        private Object value;
 
         public JsonItem(String key, Object value) {
-            super(key, value);
+            this.key = key;
+            this.value = value;
         }
 
         public JsonItem(Object[] keyAndValue){
@@ -95,6 +98,29 @@ public class JsonObject {
                     JsonSyntax.COLON,
                     JsonTypeSwitcher.write(getValue())  // 递归下去!!!
             );
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        @Override
+        public Object setValue(Object o) {
+            return null;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
         }
     }
 }

@@ -1,6 +1,7 @@
-package com.example.utils;
+package com.fashare.littlejson.utils;
 
-import com.example.constant.JsonType;
+
+import com.fashare.littlejson.constant.JsonType;
 
 import java.util.Objects;
 import java.util.stream.Stream;
