@@ -2,9 +2,9 @@ package com.fashare.littlejson.constant;
 
 
 import com.fashare.littlejson.beans.JsonArray;
+import com.fashare.littlejson.beans.JsonElement;
 import com.fashare.littlejson.beans.JsonObject;
 import com.fashare.littlejson.interfaces.JavaBeanIO;
-import com.fashare.littlejson.utils.JavaBeanIOUtil;
 
 /**
  * User: fashare(153614131@qq.com)
@@ -25,10 +25,12 @@ public class JavaBeanIOs {
 
     public static final JavaBeanIO<Character> CHAR = new JavaBeanIO<>();
 
-    public static final JavaBeanIO<JsonObject> JSON_OBJECT = new JavaBeanIO<>(
-            JavaBeanIOUtil:: parseJsonObject
+    public static final JavaBeanIO<JsonElement> JSON_OBJECT = new JavaBeanIO<>(
+            JsonObject:: create
     );
 
-    public static final JavaBeanIO<JsonArray> JSON_ARRAY = new JavaBeanIO<>();
+    public static final JavaBeanIO<JsonElement> JSON_ARRAY = new JavaBeanIO<>(
+            JsonArray:: create
+    );
     // TODO: value is JSON_ARRAY
 }  

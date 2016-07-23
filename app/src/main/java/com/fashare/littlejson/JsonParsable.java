@@ -10,9 +10,9 @@ package com.fashare.littlejson;
  * 与 JsonParser 完全对应, 可以简化 Json 解析库的使用<br/>
  * <br/>
  * 主要有三个函数: <br/>
- * 1.toJson(): JavaBean/JsonObject -> JsonString <br/>
- * 2.fromJson(): JsonString/JsonObject -> JavaBean <br/>
- * 3.parseJsonObject(): JavaBean/JsonString -> JsonObject <br/>
+ * 1.toStr(): JavaBean/JsonElement -> JsonString <br/>
+ * 2.toBean(): JsonString/JsonElement -> JavaBean <br/>
+ * 3.parseJsonElement(): JavaBean/JsonString -> JsonElement <br/>
  */
 public interface JsonParsable {
 

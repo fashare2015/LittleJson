@@ -1,9 +1,8 @@
 package com.fashare.littlejson.interfaces;
 
 
-import com.fashare.littlejson.beans.JsonObject;
+import com.fashare.littlejson.beans.JsonElement;
 import com.fashare.littlejson.constant.JsonType;
-import com.fashare.littlejson.utils.JavaBeanIOUtil;
 
 /**
  * User: fashare(153614131@qq.com)
@@ -18,7 +17,7 @@ public class JavaBeanIO<T> extends IO<T, Object>{
 //    private static Writer<T, Object> DEFAULT_WRITER = T:: toString;
 //TODO    static 引用泛型？
 
-    private Class<?> beanClass; // JsonObject 要解析成的类型
+    private Class<?> beanClass; // JsonElement 要解析成的类型
 
     public Class<?> getBeanClass() {
         return beanClass;
@@ -34,8 +33,9 @@ public class JavaBeanIO<T> extends IO<T, Object>{
 
     public JavaBeanIO(Reader<T, Object> reader) {
         super(reader);
-        this.writer = t -> !(t instanceof JsonObject)? t:
-                JavaBeanIOUtil.newInstance((JsonObject) t, beanClass); // 如果是 JsonObject, 递归下去
+        this.writer = t -> !(t instanceof JsonElement)? t:
+                ((JsonElement)t).getBeanIOUtil().newInstance((JsonElement) t, beanClass);
+                // 如果是 JsonElement, 递归下去
     }
 
     public JavaBeanIO(Reader<T, Object> reader, Writer<T, Object> writer) {

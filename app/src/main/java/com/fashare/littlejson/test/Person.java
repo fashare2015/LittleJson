@@ -14,10 +14,10 @@ public class Person implements JavaBeanParsable {
     private double score = 3.7;
     private boolean is = true;
     private char ch = 'c';
-    private Student stu = null;
-//
+    private Student stu = new Student();
+
 //    @Override
 //    public String toString() {
-//        return JsonParser.toJson(this);
+//        return JsonParser.toStr(this);
 //    }
 }

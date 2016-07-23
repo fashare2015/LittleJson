@@ -1,6 +1,6 @@
 package com.fashare.littlejson.interfaces;
 
-import com.fashare.littlejson.beans.JsonObject.JsonItem;
+import com.fashare.littlejson.beans.JsonObject;
 import com.fashare.littlejson.constant.JsonType;
 
 import java.util.function.Function;
@@ -10,9 +10,9 @@ import java.util.function.Function;
  * Date: 2016-06-26
  * Time: 18:06
  * <br/><br/>
- * 在 {@link JsonItem} {key: value}中, <br/>
+ * 在 {@link JsonObject.JsonObjectItem} {key: value}中, <br/>
  * 根据 key/value 的{@link JsonType}, 用 Reader, Writer 进行读写 <br/>
- * @param <T> 解析后的对象 {@link JsonType}定义的一些合法类型：JsonObject/int/double...
+ * @param <T> 解析后的对象 {@link JsonType}定义的一些合法类型：JsonElement/int/double...
  * @param <O> 待解析的对象 jsonString/JavaBean
  */
 public class IO<T, O> {

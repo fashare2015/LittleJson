@@ -54,13 +54,19 @@ public class JsonTypeSwitcher {
     }
 
     private static <T> T read(Object bean, JsonType jsonType){
-        return (T)Stream.of(jsonType)
-                .filter(type -> bean != null)
-//                .filter(type -> type != JsonType.ERROR)
-                .filter(type -> JsonType.matchClazz(ClassUtil.wrapperIfPrimitive(bean.getClass()))
-                    || type.equals(JsonType.JSON_OBJECT)
-                )
-                .flatMap(type -> Stream.of(bean).map(type.getJavaBeanIO().getReader()))
+        return (T)Stream.of(bean)
+                .filter(Objects:: nonNull)
+                .map(Object:: getClass)
+                .map(ClassUtil:: wrapperIfPrimitive)    // 封装类
+                .filter(jsonType:: matchClazz)
+                .flatMap(aClass -> {
+//                    System.out.println(jsonType.getClazz());
+                    return Stream.of(bean).map(jsonType.getJavaBeanIO().getReader());
+                })
+                .map(o -> {
+//                    System.out.println("read: " + o);
+                    return o;
+                })
                 .findFirst().orElse(null);
     }
 

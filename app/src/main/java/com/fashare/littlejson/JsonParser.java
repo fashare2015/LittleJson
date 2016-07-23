@@ -1,8 +1,10 @@
 package com.fashare.littlejson;
 
-import com.fashare.littlejson.beans.JsonObject;
+import com.fashare.littlejson.beans.JsonElement;
 import com.fashare.littlejson.utils.JsonTypeSwitcher;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -10,33 +12,47 @@ import java.util.stream.Stream;
  * Date: 2016-06-24
  * Time: 18:03
  * <br/><br/>
- * Json 解析类, 以 JsonObject 为桥梁, 实现 JavaBean 和 JsonString 之间的相互映射.
+ * Json 解析类, 以 JsonElement 为桥梁, 实现 JavaBean 和 JsonString 之间的相互映射.
  * 主要有三个函数:
- * 1.toJson(): JavaBean/JsonObject -> JsonString
- * 2.fromJson(): JsonString/JsonObject -> JavaBean
- * 3.parseJsonObject(): JavaBean/JsonString -> JsonObject
+ * 1.toStr(): JavaBean/JsonElement -> JsonString
+ * 2.toBean(): JsonString/JsonElement -> JavaBean
+ * 3.parseJsonElement(): JavaBean/JsonString -> JsonElement
  */
 public class JsonParser {
+    // TODO 状态不可是 static
+    private static ParameterizedType parameterizedType;  // 带参数的类型(范型)
+    private static Class<?> javaBeanClazz;
 
-    public static JsonObject parse(String jsonString){
-        return Stream.of(jsonString)
-                .map(JsonTypeSwitcher:: <JsonObject>read)
-                .findFirst().orElse(new JsonObject());
+    public static ParameterizedType getParameterizedType() {
+        return parameterizedType;
     }
 
-    public static <BEAN> JsonObject parse(BEAN bean){
+    public static Class<?> getJavaBeanClazz() {
+        return javaBeanClazz;
+    }
+
+    public static JsonElement parse(String jsonString){
+        return Stream.of(jsonString)
+                .map(JsonTypeSwitcher:: <JsonElement>read)
+                .filter(Objects:: nonNull)
+                .findFirst().orElse(null);
+    }
+
+    public static <BEAN> JsonElement parse(BEAN bean){
         return Stream.of(bean)
-                .map(JsonTypeSwitcher:: <JsonObject>read)   // 从 JavaBean 中通过反射解析
-                .findFirst().orElse(new JsonObject());
+                .map(JsonTypeSwitcher:: <JsonElement>read)   // 从 JavaBean 中通过反射解析
+                .filter(Objects:: nonNull)
+                .findFirst().orElse(null);
     }
 
     public static <BEAN> String toJson(BEAN bean) {
         return toJson(parse(bean));
     }
 
-    public static String toJson(JsonObject jsonObject){
-        return Stream.of(jsonObject)
+    public static String toJson(JsonElement jsonElement){
+        return Stream.of(jsonElement)
                 .map(JsonTypeSwitcher:: write)
+                .filter(Objects:: nonNull)
                 .findFirst().orElse(null);
     }
 
@@ -44,9 +60,16 @@ public class JsonParser {
         return fromJson(parse(jsonString), clazz);
     }
 
-    public static <BEAN> BEAN fromJson(JsonObject jsonObject, Class<BEAN> clazz) {
-        return Stream.of(jsonObject)
+    public static <BEAN> BEAN fromJson(JsonElement jsonElement, Class<BEAN> clazz) {
+        return Stream.of(jsonElement)
                 .map(mJsonObject -> JsonTypeSwitcher.write(mJsonObject, clazz))
+                .filter(Objects:: nonNull)
                 .findFirst().orElse(null);
+    }
+
+    public static <BEAN> BEAN fromJson(String jsonString, ParameterizedType type) {
+        JsonParser.parameterizedType = type;
+        JsonParser.javaBeanClazz = (Class<BEAN>) type.getRawType();
+        return fromJson(jsonString, (Class<BEAN>) javaBeanClazz);
     }
 }

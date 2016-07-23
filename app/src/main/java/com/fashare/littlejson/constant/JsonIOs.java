@@ -1,9 +1,9 @@
 package com.fashare.littlejson.constant;
 
 import com.fashare.littlejson.beans.JsonArray;
+import com.fashare.littlejson.beans.JsonElement;
 import com.fashare.littlejson.beans.JsonObject;
 import com.fashare.littlejson.interfaces.JsonIO;
-import com.fashare.littlejson.utils.JsonIOUtil;
 
 /**
  * User: fashare(153614131@qq.com)
@@ -22,19 +22,22 @@ public class JsonIOs {
 
     public static final JsonIO<String> STRING = new JsonIO<>(
             str -> str.substring(1, str.length()-1),
-            str -> JsonIOUtil.surroundBy(str, JsonSyntax.DOUBLE_QUOTE)
+            str -> JsonElement.StrIOUtil.surroundBy(str, JsonSyntax.DOUBLE_QUOTE)
     );
 
     public static final JsonIO<Character> CHAR = new JsonIO<>(
             str -> str.charAt(1),
-            character -> JsonIOUtil.surroundBy(character, JsonSyntax.SINGLE_QUOTE)
+            character -> JsonElement.StrIOUtil.surroundBy(character, JsonSyntax.SINGLE_QUOTE)
     );
 
-    public static final JsonIO<JsonObject> JSON_OBJECT = new JsonIO<>(JsonIOUtil:: parseJsonObject);
+    public static final JsonIO<JsonElement> JSON_OBJECT = new JsonIO<>(
+            JsonObject:: create,
+            JsonElement:: toStr
+    );
 
-    public static final JsonIO<JsonArray> JSON_ARRAY = new JsonIO<>(
-            null,
-            null
+    public static final JsonIO<JsonElement> JSON_ARRAY = new JsonIO<>(
+            JsonArray:: create,
+            JsonElement:: toStr
     );
     // TODO: value is JSON_ARRAY
 }  

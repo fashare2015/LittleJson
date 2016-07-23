@@ -5,6 +5,7 @@ import com.fashare.littlejson.beans.JsonObject;
 import com.fashare.littlejson.interfaces.JavaBeanIO;
 import com.fashare.littlejson.interfaces.JsonIO;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
  * Date: 2016-06-26
  * Time: 18:06
  * <br/><br/>
- * 在 {@link JsonObject.JsonItem} {key: value}中,
+ * 在 {@link JsonObject.JsonObjectItem} {key: value}中,
  * 指定 key 或 value 的可取的类型
  */
 public enum JsonType {
@@ -21,8 +22,8 @@ public enum JsonType {
     DOUBLE(RegexPattern.DOUBLE, JsonIOs.DOUBLE, JavaBeanIOs.DOUBLE, Double.class),
     CHAR(RegexPattern.CHAR, JsonIOs.CHAR, JavaBeanIOs.CHAR, Character.class),
     BOOLEAN(RegexPattern.BOOLEAN, JsonIOs.BOOLEAN, JavaBeanIOs.BOOLEAN, Boolean.class),
-    JSON_OBJECT(RegexPattern.JSON_OBJECT, JsonIOs.JSON_OBJECT, JavaBeanIOs.JSON_OBJECT, JsonObject.class),
-    JSON_ARRAY(RegexPattern.JSON_ARRAY, JsonIOs.JSON_ARRAY, JavaBeanIOs.JSON_ARRAY, JsonArray.class);
+    JSON_ARRAY(RegexPattern.JSON_ARRAY, JsonIOs.JSON_ARRAY, JavaBeanIOs.JSON_ARRAY, JsonArray.class),
+    JSON_OBJECT(RegexPattern.JSON_OBJECT, JsonIOs.JSON_OBJECT, JavaBeanIOs.JSON_OBJECT, JsonObject.class);
 //    ERROR("ERROR", null, null, null);
 
     private String typePattern;
@@ -59,12 +60,23 @@ public enum JsonType {
     }
 
     public Class<? extends Object> getJavaBeanClazz() {
-        return clazz.equals(JsonObject.class)? Object.class: clazz;
+        return clazz.equals(JsonArray.class)? List.class:
+                clazz.equals(JsonObject.class)? Object.class:
+                clazz;
     }
 
-    public static boolean matchClazz(Class aClass) {
+    /**
+     * @param aClass
+     * @return type.getJavaBeanClazz() 是 aClass 的父类
+     */
+    public boolean matchClazz(Class aClass) {
+        return this.getJavaBeanClazz().isAssignableFrom(aClass);
+    }
+
+    public static Class<? extends Object> showClass(Class aClass) {
         return Stream.of(JsonType.values())
-                .filter(type -> type.getClazz().equals(aClass))
-                .count() > 0;
+                .filter(type -> type.getJavaBeanClazz().isAssignableFrom(aClass))
+                .map(type -> type.getJavaBeanClazz())
+                .findFirst().orElse(null);
     }
 }
